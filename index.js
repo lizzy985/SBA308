@@ -177,11 +177,16 @@ const CourseInfo = {
     
     // Get the list of unique learner IDs
     const learnerIds = [];
-    submissions.forEach(submission => {
-    if (!learnerIds.includes(submission.learner_id)) {
-        learnerIds.push(submission.learner_id);
+    try{
+      submissions.forEach(submission => {
+        if (!learnerIds.includes(submission.learner_id)) {
+            learnerIds.push(submission.learner_id);
+        }
+        });
+    }catch(error) {
+      console.log(error);
     }
-    });
+    
   
     // Find the assignments that are common among all learners
     const commonAssignments = assignments.filter(assignment => {
@@ -225,7 +230,7 @@ const CourseInfo = {
   
           // Calculate score considering late submissions
           if (new Date(submission.submission.submitted_at) > new Date(assignment.due_at)) {
-            const adjustedScore = (score - 15) > 0 ? (score - 15) : 0;
+            const adjustedScore = (score - (possible*0.1)) > 0 ? (score - (possible*0.1)) : 0;
             result[id] = adjustedScore / possible;
             totalScore += adjustedScore;
           } else {
